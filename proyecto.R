@@ -20,7 +20,7 @@ rate <- function(strings) {
 }
 
 puntajes = c(0, rate(MR), rate(CF), rate(JAN), rate(JAK))
-names(puntajes) = c("Centro","Mónica Rincón", "Camila Flores", "José Antonio Neme", "José Antonio Kast")
+names(puntajes) = c("  Centro","  Mónica Rincón","  Camila Flores","  José Antonio Neme","  José Antonio Kast")
 plot(range(puntajes),c(1,1),type="l",col="lightgrey",ylab="", yaxt="n",xlab="") # línea gráfico
 points(puntajes, rep(1,length(puntajes))) # Puntos
 text(puntajes,1,names(puntajes),pos=4,srt=90) # Nombres para los puntos
