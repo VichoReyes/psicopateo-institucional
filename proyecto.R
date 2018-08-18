@@ -5,6 +5,8 @@ CF = rtweet::get_timeline("Cami_FloresO", n=3200)$text
 JAN = rtweet::get_timeline("jananeme", n=3200)$text
 JAK = rtweet::get_timeline("joseantoniokast", n=3200)$text
 
+# scores.csv es un archivo con expresiones regulares para identificar
+# las opiniones políticas de una persona
 scores <- read.csv("scores.csv", header=FALSE)
 scores$V1 = str_to_lower(as.character(scores$V1))
 
@@ -19,8 +21,17 @@ rate <- function(strings) {
   return(total_result/length(strings)) # normalizar
 }
 
-puntajes = c(0, rate(MR), rate(CF), rate(JAN), rate(JAK))
-names(puntajes) = c("  Centro","  Mónica Rincón","  Camila Flores","  José Antonio Neme","  José Antonio Kast")
-plot(range(puntajes),c(1,1),type="l",col="lightgrey",ylab="", yaxt="n",xlab="") # línea gráfico
-points(puntajes, rep(1,length(puntajes))) # Puntos
-text(puntajes,1,names(puntajes),pos=4,srt=90) # Nombres para los puntos
+library(ggplot2)
+
+puntajes = c(rate(MR), rate(CF), rate(JAN), rate(JAK))
+names(puntajes) = c("Mónica Rincón","Camila Flores","José Antonio Neme","José Antonio Kast")
+df = data.frame(personajes = names(puntajes), puntaje = puntajes)
+
+# crear un ggplot con los nombres y distintos colores
+p = ggplot(df, aes(x=puntaje, y=1, label=personajes, colour = personajes))
+p = p + geom_point()
+# se usa nudge_x y nudge_y para que los nombres no se tapen entre ellos.
+p = p + geom_text(hjust=0, vjust=0, angle = 45, nudge_x = c(0.04,0,0,-0.075), nudge_y = 0.005, size=5)
+p = p + coord_cartesian(ylim = c(0.9,1.2), xlim = c(0,0.9))
+# mostrarlo
+p
